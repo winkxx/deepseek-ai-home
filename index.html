@@ -115,6 +115,12 @@
             align-items: center;
             justify-content: center;
             background-color: var(--card-bg);
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover, .add-btn:hover, .user-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .categories {
@@ -140,6 +146,10 @@
         .category-btn.active {
             background-color: var(--primary-color);
             color: white;
+        }
+
+        .category-btn:hover {
+            transform: translateY(-2px);
         }
 
         .links-grid {
@@ -235,6 +245,18 @@
             width: 90%;
             max-width: 500px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .modal-header {
@@ -254,6 +276,11 @@
             font-size: 1.5rem;
             cursor: pointer;
             color: var(--text-color);
+            transition: all 0.2s ease;
+        }
+
+        .close-btn:hover {
+            transform: scale(1.1);
         }
 
         .form-group {
@@ -274,6 +301,12 @@
             background-color: var(--card-bg);
             color: var(--text-color);
             font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
         }
 
         .form-actions {
@@ -297,9 +330,19 @@
             color: white;
         }
 
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
         .btn-secondary {
             background-color: #e0e0e0;
             color: #333;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d0d0d0;
+            transform: translateY(-2px);
         }
 
         footer {
@@ -372,6 +415,7 @@
 
         .search-btn:hover {
             background-color: #2980b9;
+            transform: translateY(-2px);
         }
 
         /* 权限管理样式 */
@@ -420,6 +464,7 @@
 
         .login-btn:hover {
             background-color: #2980b9;
+            transform: translateY(-2px);
         }
 
         .error-message {
@@ -705,6 +750,7 @@
 
         // 初始化页面
         document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
             const linksContainer = document.getElementById('links-container');
             const categoryButtons = document.querySelectorAll('.category-btn');
             const searchInput = document.getElementById('search-input');
@@ -740,8 +786,7 @@
             // 初始化当前用户
             let currentUser = getCurrentUser();
             if (!currentUser) {
-                // 如果没有登录用户，显示登录模态框
-                loginModal.style.display = 'flex';
+                // 如果没有登录用户，默认使用guest
                 currentUser = { id: 0, username: "未登录", role: "guest", avatar: "?" };
             }
             
@@ -899,7 +944,12 @@
                 localStorage.setItem('theme', newTheme);
             });
 
-            // 显示登录模态框
+            // 显示添加模态框
+            addBtn.addEventListener('click', function() {
+                addModal.style.display = 'flex';
+            });
+
+            // 显示用户管理模态框
             userBtn.addEventListener('click', function() {
                 if (currentUser.id === 0) {
                     // 未登录状态，显示登录模态框
@@ -910,20 +960,6 @@
                     userModal.style.display = 'flex';
                 }
             });
-
-            // 显示添加模态框
-            addBtn.addEventListener('click', function() {
-                addModal.style.display = 'flex';
-            });
-
-            // 关闭登录模态框
-            function closeLogin() {
-                loginModal.style.display = 'none';
-                loginForm.reset();
-                loginError.textContent = '';
-            }
-
-            closeLoginModal.addEventListener('click', closeLogin);
 
             // 关闭添加模态框
             function closeAddModal() {
@@ -941,6 +977,15 @@
 
             closeUserModal.addEventListener('click', closeUserManagement);
             cancelUserBtn.addEventListener('click', closeUserManagement);
+
+            // 关闭登录模态框
+            function closeLogin() {
+                loginModal.style.display = 'none';
+                loginForm.reset();
+                loginError.textContent = '';
+            }
+
+            closeLoginModal.addEventListener('click', closeLogin);
 
             // 关闭修改密码模态框
             function closePasswordModal() {

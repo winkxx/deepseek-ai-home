@@ -485,12 +485,14 @@
             display: none;
             position: absolute;
             right: 0;
+            top: 100%;
             background-color: var(--card-bg);
             min-width: 160px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 1;
             border-radius: var(--border-radius);
             overflow: hidden;
+            margin-top: 5px;
         }
 
         .user-menu-content button {
@@ -510,7 +512,7 @@
             background-color: rgba(0, 0, 0, 0.05);
         }
 
-        .user-menu:hover .user-menu-content {
+        .user-menu.show .user-menu-content {
             display: block;
         }
 
@@ -553,7 +555,7 @@
                     <input type="text" id="search-input" placeholder="搜索网站...">
                 </div>
                 <button class="add-btn" id="add-btn" style="display: none;">+</button>
-                <div class="user-menu">
+                <div class="user-menu" id="user-menu-container">
                     <button class="user-btn" id="user-btn">👤</button>
                     <div class="user-menu-content" id="user-menu">
                         <!-- 用户菜单内容将通过JavaScript动态生成 -->
@@ -777,6 +779,7 @@
             const themeToggle = document.getElementById('theme-toggle');
             const addBtn = document.getElementById('add-btn');
             const userBtn = document.getElementById('user-btn');
+            const userMenuContainer = document.getElementById('user-menu-container');
             const userMenu = document.getElementById('user-menu');
             const loginModal = document.getElementById('login-modal');
             const addModal = document.getElementById('add-modal');
@@ -823,6 +826,17 @@
                     const id = parseInt(e.target.getAttribute('data-id'));
                     deleteLink(id);
                 }
+            });
+            
+            // 用户菜单显示/隐藏控制
+            userBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userMenuContainer.classList.toggle('show');
+            });
+            
+            // 点击页面其他地方时关闭用户菜单
+            document.addEventListener('click', function() {
+                userMenuContainer.classList.remove('show');
             });
             
             // 渲染链接卡片
@@ -925,17 +939,29 @@
                 
                 // 添加菜单按钮事件监听器
                 if (currentUser.id === 0) {
-                    document.getElementById('login-menu-btn').addEventListener('click', function() {
-                        loginModal.style.display = 'flex';
-                    });
+                    const loginMenuBtn = document.getElementById('login-menu-btn');
+                    if (loginMenuBtn) {
+                        loginMenuBtn.addEventListener('click', function() {
+                            loginModal.style.display = 'flex';
+                            userMenuContainer.classList.remove('show');
+                        });
+                    }
                 } else {
-                    document.getElementById('change-password-menu-btn').addEventListener('click', function() {
-                        passwordModal.style.display = 'flex';
-                    });
+                    const changePasswordMenuBtn = document.getElementById('change-password-menu-btn');
+                    if (changePasswordMenuBtn) {
+                        changePasswordMenuBtn.addEventListener('click', function() {
+                            passwordModal.style.display = 'flex';
+                            userMenuContainer.classList.remove('show');
+                        });
+                    }
                     
-                    document.getElementById('logout-menu-btn').addEventListener('click', function() {
-                        logout();
-                    });
+                    const logoutMenuBtn = document.getElementById('logout-menu-btn');
+                    if (logoutMenuBtn) {
+                        logoutMenuBtn.addEventListener('click', function() {
+                            logout();
+                            userMenuContainer.classList.remove('show');
+                        });
+                    }
                 }
             }
 

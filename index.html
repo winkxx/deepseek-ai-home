@@ -570,6 +570,42 @@
             background-color: #e74c3c;
         }
 
+        /* 快速登录区域 */
+        .quick-login {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .quick-login h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .login-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .login-btn-small {
+            padding: 8px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .login-btn-small:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -591,6 +627,10 @@
             .controls {
                 width: 100%;
                 justify-content: space-between;
+            }
+            
+            .login-buttons {
+                flex-direction: column;
             }
         }
     </style>
@@ -618,6 +658,16 @@
                 <button class="theme-toggle" id="theme-toggle">🌙</button>
             </div>
         </header>
+
+        <!-- 快速登录区域 -->
+        <div class="quick-login" id="quick-login">
+            <h3>快速登录</h3>
+            <div class="login-buttons">
+                <button class="login-btn-small" data-username="admin" data-password="admin123">管理员登录</button>
+                <button class="login-btn-small" data-username="user" data-password="user123">用户登录</button>
+                <button class="login-btn-small" data-username="guest" data-password="guest123">访客登录</button>
+            </div>
+        </div>
 
         <!-- 权限说明区域 -->
         <div class="permission-info">
@@ -879,6 +929,7 @@
             const permissionControls = document.getElementById('permission-controls');
             const runtimeElement = document.getElementById('runtime');
             const loginError = document.getElementById('login-error');
+            const quickLogin = document.getElementById('quick-login');
             
             // 从本地存储加载数据
             loadFromLocalStorage();
@@ -916,6 +967,15 @@
             // 点击页面其他地方时关闭用户菜单
             document.addEventListener('click', function() {
                 userMenuContainer.classList.remove('show');
+            });
+            
+            // 快速登录按钮事件
+            document.querySelectorAll('.login-btn-small').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const username = this.getAttribute('data-username');
+                    const password = this.getAttribute('data-password');
+                    handleLogin(username, password);
+                });
             });
             
             // 渲染链接卡片
@@ -990,12 +1050,15 @@
                 if (currentUser.role === 'admin') {
                     addBtn.style.display = 'flex';
                     permissionControls.style.display = 'flex';
+                    quickLogin.style.display = 'none';
                 } else if (currentUser.role === 'user') {
                     addBtn.style.display = 'flex';
                     permissionControls.style.display = 'flex';
+                    quickLogin.style.display = 'none';
                 } else {
                     addBtn.style.display = 'none';
                     permissionControls.style.display = 'none';
+                    quickLogin.style.display = 'block';
                 }
                 
                 // 重新渲染链接
@@ -1007,7 +1070,7 @@
                 if (currentUser.id === 0) {
                     // 未登录状态
                     userMenu.innerHTML = `
-                        <button id="login-menu-btn">登录</button>
+                        <button id="manual-login-btn">手动登录</button>
                     `;
                 } else {
                     // 已登录状态
@@ -1019,9 +1082,9 @@
                 
                 // 添加菜单按钮事件监听器
                 if (currentUser.id === 0) {
-                    const loginMenuBtn = document.getElementById('login-menu-btn');
-                    if (loginMenuBtn) {
-                        loginMenuBtn.addEventListener('click', function() {
+                    const manualLoginBtn = document.getElementById('manual-login-btn');
+                    if (manualLoginBtn) {
+                        manualLoginBtn.addEventListener('click', function() {
                             loginModal.style.display = 'flex';
                             userMenuContainer.classList.remove('show');
                         });
@@ -1042,6 +1105,21 @@
                             userMenuContainer.classList.remove('show');
                         });
                     }
+                }
+            }
+
+            // 处理登录
+            function handleLogin(username, password) {
+                const users = getUsers();
+                const user = users.find(u => u.username === username && u.password === password);
+                
+                if (user) {
+                    currentUser = user;
+                    saveCurrentUser(user);
+                    updateUserInterface();
+                    closeLoginModal();
+                } else {
+                    alert('用户名或密码错误！');
                 }
             }
 
@@ -1123,13 +1201,13 @@
             cancelBtn.addEventListener('click', closeAddModal);
 
             // 关闭登录模态框
-            function closeLogin() {
+            function closeLoginModal() {
                 loginModal.style.display = 'none';
                 loginForm.reset();
                 loginError.textContent = '';
             }
 
-            closeLoginModal.addEventListener('click', closeLogin);
+            closeLoginModal.addEventListener('click', closeLoginModal);
 
             // 关闭修改密码模态框
             function closePasswordModal() {
@@ -1147,17 +1225,7 @@
                 const username = document.getElementById('login-username').value;
                 const password = document.getElementById('login-password').value;
                 
-                const users = getUsers();
-                const user = users.find(u => u.username === username && u.password === password);
-                
-                if (user) {
-                    currentUser = user;
-                    saveCurrentUser(user);
-                    updateUserInterface();
-                    closeLogin();
-                } else {
-                    loginError.textContent = '用户名或密码错误！';
-                }
+                handleLogin(username, password);
             });
 
             // 添加新网站

@@ -88,6 +88,15 @@
             font-weight: bold;
         }
 
+        .permission-display {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
         .search-container {
             position: relative;
             width: 300px;
@@ -516,6 +525,51 @@
             display: block;
         }
 
+        /* 权限说明区域 */
+        .permission-info {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .permission-info h3 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .permission-levels {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .permission-level {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.8rem;
+        }
+
+        .permission-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .public-color {
+            background-color: #2ecc71;
+        }
+
+        .user-color {
+            background-color: #3498db;
+        }
+
+        .admin-color {
+            background-color: #e74c3c;
+        }
+
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -564,6 +618,25 @@
                 <button class="theme-toggle" id="theme-toggle">🌙</button>
             </div>
         </header>
+
+        <!-- 权限说明区域 -->
+        <div class="permission-info">
+            <h3>权限说明</h3>
+            <div class="permission-levels">
+                <div class="permission-level">
+                    <div class="permission-color public-color"></div>
+                    <span>公开 - 所有用户可见</span>
+                </div>
+                <div class="permission-level">
+                    <div class="permission-color user-color"></div>
+                    <span>用户 - 登录用户可见</span>
+                </div>
+                <div class="permission-level">
+                    <div class="permission-color admin-color"></div>
+                    <span>管理员 - 仅管理员可见</span>
+                </div>
+            </div>
+        </div>
 
         <!-- 搜索引擎搜索框 -->
         <div class="search-engine-container">
@@ -626,6 +699,12 @@
                 <button type="submit" class="login-btn">登录</button>
                 <div class="error-message" id="login-error"></div>
             </form>
+            <div style="margin-top: 20px; text-align: center;">
+                <h3>默认账户</h3>
+                <p>管理员: admin / admin123</p>
+                <p>用户: user / user123</p>
+                <p>访客: guest / guest123</p>
+            </div>
         </div>
     </div>
 
@@ -900,7 +979,8 @@
                 // 更新用户信息显示
                 userInfo.innerHTML = `
                     <div class="user-avatar">${currentUser.avatar}</div>
-                    <span>${currentUser.username} (${currentUser.role})</span>
+                    <span>${currentUser.username}</span>
+                    <div class="permission-display">${currentUser.role}</div>
                 `;
                 
                 // 更新用户菜单

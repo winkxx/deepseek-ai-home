@@ -13,7 +13,6 @@
             --text-color: #333333;
             --border-radius: 8px;
             --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --blur-intensity: 10px;
         }
 
         [data-theme="dark"] {
@@ -37,36 +36,6 @@
             transition: all 0.3s ease;
             min-height: 100vh;
             padding: 20px;
-            position: relative;
-        }
-
-        /* 毛玻璃背景效果 */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(52, 152, 219, 0.1) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(46, 204, 113, 0.1) 0%, transparent 20%),
-                radial-gradient(circle at 50% 50%, rgba(155, 89, 182, 0.1) 0%, transparent 20%);
-            background-attachment: fixed;
-            z-index: -1;
-        }
-
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(var(--blur-intensity));
-            -webkit-backdrop-filter: blur(var(--blur-intensity));
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-
-        [data-theme="dark"] .glass-effect {
-            background: rgba(45, 45, 45, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .container {
@@ -79,8 +48,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-            padding: 20px;
-            border-radius: var(--border-radius);
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .logo {
@@ -153,8 +122,7 @@
             gap: 15px;
             margin-bottom: 30px;
             overflow-x: auto;
-            padding: 15px;
-            border-radius: var(--border-radius);
+            padding-bottom: 10px;
         }
 
         .category-btn {
@@ -340,15 +308,6 @@
             padding: 20px;
             color: #777;
             font-size: 0.9rem;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .runtime {
-            font-size: 0.8rem;
-            color: var(--primary-color);
-            font-weight: bold;
         }
 
         /* 搜索引擎搜索框样式 */
@@ -412,8 +371,6 @@
             gap: 10px;
             margin-bottom: 20px;
             align-items: center;
-            padding: 15px;
-            border-radius: var(--border-radius);
         }
 
         .permission-filter {
@@ -452,7 +409,7 @@
 </head>
 <body>
     <div class="container">
-        <header class="glass-effect">
+        <header>
             <div class="logo">
                 <h1>我的个人导航</h1>
             </div>
@@ -470,7 +427,7 @@
         </header>
 
         <!-- 搜索引擎搜索框 -->
-        <div class="search-engine-container glass-effect">
+        <div class="search-engine-container">
             <h2>网络搜索</h2>
             <form class="search-engine-form" id="search-engine-form">
                 <input type="text" class="search-input" id="engine-search-input" placeholder="输入搜索关键词..." required>
@@ -488,7 +445,7 @@
         </div>
 
         <!-- 权限控制区域 -->
-        <div class="permission-controls glass-effect" id="permission-controls">
+        <div class="permission-controls" id="permission-controls">
             <span>权限过滤:</span>
             <select class="permission-filter" id="permission-filter">
                 <option value="all">所有权限</option>
@@ -498,7 +455,7 @@
             </select>
         </div>
 
-        <div class="categories glass-effect">
+        <div class="categories">
             <button class="category-btn active" data-category="all">全部</button>
             <button class="category-btn" data-category="work">工作</button>
             <button class="category-btn" data-category="entertainment">娱乐</button>
@@ -511,15 +468,14 @@
             <!-- 链接将通过JavaScript动态生成 -->
         </div>
 
-        <footer class="glass-effect">
+        <footer>
             <p>© 2025 个人导航中心 | 使用Vercel部署</p>
-            <div class="runtime" id="runtime">页面已运行: 0天 0小时 0分钟 0秒</div>
         </footer>
     </div>
 
     <!-- 添加项目的模态框 -->
     <div class="modal" id="add-modal">
-        <div class="modal-content glass-effect">
+        <div class="modal-content">
             <div class="modal-header">
                 <h2>添加新网站</h2>
                 <button class="close-btn" id="close-modal">&times;</button>
@@ -569,7 +525,7 @@
 
     <!-- 用户管理模态框 -->
     <div class="modal" id="user-modal">
-        <div class="modal-content glass-effect">
+        <div class="modal-content">
             <div class="modal-header">
                 <h2>用户管理</h2>
                 <button class="close-btn" id="close-user-modal">&times;</button>
@@ -580,34 +536,6 @@
             <div class="form-actions">
                 <button type="button" class="btn btn-secondary" id="cancel-user-btn">关闭</button>
             </div>
-        </div>
-    </div>
-
-    <!-- 修改密码模态框 -->
-    <div class="modal" id="password-modal">
-        <div class="modal-content glass-effect">
-            <div class="modal-header">
-                <h2>修改密码</h2>
-                <button class="close-btn" id="close-password-modal">&times;</button>
-            </div>
-            <form id="password-form">
-                <div class="form-group">
-                    <label for="current-password">当前密码</label>
-                    <input type="password" id="current-password" required>
-                </div>
-                <div class="form-group">
-                    <label for="new-password">新密码</label>
-                    <input type="password" id="new-password" required minlength="6">
-                </div>
-                <div class="form-group">
-                    <label for="confirm-password">确认新密码</label>
-                    <input type="password" id="confirm-password" required minlength="6">
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="cancel-password-btn">取消</button>
-                    <button type="submit" class="btn btn-primary">修改密码</button>
-                </div>
-            </form>
         </div>
     </div>
 
@@ -674,9 +602,6 @@
             "admin": 2
         };
 
-        // 页面启动时间
-        const pageStartTime = new Date();
-
         // 初始化页面
         document.addEventListener('DOMContentLoaded', function() {
             const linksContainer = document.getElementById('links-container');
@@ -687,22 +612,17 @@
             const userBtn = document.getElementById('user-btn');
             const addModal = document.getElementById('add-modal');
             const userModal = document.getElementById('user-modal');
-            const passwordModal = document.getElementById('password-modal');
             const closeModal = document.getElementById('close-modal');
             const closeUserModal = document.getElementById('close-user-modal');
-            const closePasswordModal = document.getElementById('close-password-modal');
             const cancelBtn = document.getElementById('cancel-btn');
             const cancelUserBtn = document.getElementById('cancel-user-btn');
-            const cancelPasswordBtn = document.getElementById('cancel-password-btn');
             const addForm = document.getElementById('add-form');
-            const passwordForm = document.getElementById('password-form');
             const searchEngineForm = document.getElementById('search-engine-form');
             const engineSearchInput = document.getElementById('engine-search-input');
             const engineSelect = document.getElementById('engine-select');
             const permissionFilter = document.getElementById('permission-filter');
             const userInfo = document.getElementById('user-info');
             const permissionControls = document.getElementById('permission-controls');
-            const runtimeElement = document.getElementById('runtime');
             
             // 从本地存储加载数据
             loadFromLocalStorage();
@@ -716,9 +636,6 @@
             
             // 更新用户界面
             updateUserInterface();
-            
-            // 启动运行时间计时器
-            startRuntimeTimer();
             
             // 渲染链接卡片
             function renderLinks(links) {
@@ -747,7 +664,7 @@
                 
                 filteredLinks.forEach((link, index) => {
                     const linkCard = document.createElement('a');
-                    linkCard.className = 'link-card glass-effect';
+                    linkCard.className = 'link-card';
                     linkCard.href = link.url;
                     linkCard.target = '_blank';
                     linkCard.setAttribute('data-category', link.category);
@@ -896,15 +813,6 @@
             closeUserModal.addEventListener('click', closeUserManagement);
             cancelUserBtn.addEventListener('click', closeUserManagement);
 
-            // 关闭修改密码模态框
-            function closePasswordModal() {
-                passwordModal.style.display = 'none';
-                passwordForm.reset();
-            }
-
-            closePasswordModal.addEventListener('click', closePasswordModal);
-            cancelPasswordBtn.addEventListener('click', closePasswordModal);
-
             // 显示用户管理界面
             function showUserManagement() {
                 const userManagement = document.getElementById('user-management');
@@ -925,16 +833,7 @@
                                 </div>
                             `).join('')}
                         </div>
-                        <div style="margin-top: 20px; text-align: center;">
-                            <button class="btn btn-primary" id="change-password-btn">修改密码</button>
-                        </div>
                     `;
-                    
-                    // 添加修改密码按钮事件监听器
-                    document.getElementById('change-password-btn').addEventListener('click', function() {
-                        userModal.style.display = 'none';
-                        passwordModal.style.display = 'flex';
-                    });
                 } else {
                     // 普通用户只能看到自己的信息和切换功能
                     userManagement.innerHTML = `
@@ -956,20 +855,7 @@
                                 </div>
                             `).join('')}
                         </div>
-                        ${currentUser.role !== 'guest' ? `
-                        <div style="margin-top: 20px; text-align: center;">
-                            <button class="btn btn-primary" id="change-password-btn">修改密码</button>
-                        </div>
-                        ` : ''}
                     `;
-                    
-                    // 添加修改密码按钮事件监听器（如果用户不是访客）
-                    if (currentUser.role !== 'guest') {
-                        document.getElementById('change-password-btn').addEventListener('click', function() {
-                            userModal.style.display = 'none';
-                            passwordModal.style.display = 'flex';
-                        });
-                    }
                 }
             }
 
@@ -996,37 +882,6 @@
                 alert('网站添加成功！');
             });
 
-            // 修改密码功能
-            passwordForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const currentPassword = document.getElementById('current-password').value;
-                const newPassword = document.getElementById('new-password').value;
-                const confirmPassword = document.getElementById('confirm-password').value;
-                
-                // 验证当前密码
-                const users = getUsers();
-                const user = users.find(u => u.id === currentUser.id);
-                
-                if (!user || user.password !== currentPassword) {
-                    alert('当前密码不正确！');
-                    return;
-                }
-                
-                // 验证新密码
-                if (newPassword !== confirmPassword) {
-                    alert('新密码和确认密码不匹配！');
-                    return;
-                }
-                
-                // 更新密码
-                user.password = newPassword;
-                saveUsers(users);
-                
-                alert('密码修改成功！');
-                closePasswordModal();
-            });
-
             // 搜索引擎搜索功能
             searchEngineForm.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -1039,21 +894,6 @@
                     window.open(searchUrl, '_blank');
                 }
             });
-
-            // 运行时间计时器
-            function startRuntimeTimer() {
-                setInterval(function() {
-                    const now = new Date();
-                    const diff = now - pageStartTime;
-                    
-                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                    
-                    runtimeElement.textContent = `页面已运行: ${days}天 ${hours}小时 ${minutes}分钟 ${seconds}秒`;
-                }, 1000);
-            }
 
             // 保存到本地存储
             function saveToLocalStorage() {
@@ -1077,17 +917,6 @@
             // 保存当前用户
             function saveCurrentUser(user) {
                 localStorage.setItem('currentUser', JSON.stringify(user));
-            }
-
-            // 获取用户列表
-            function getUsers() {
-                const savedUsers = localStorage.getItem('users');
-                return savedUsers ? JSON.parse(savedUsers) : [...defaultUsers];
-            }
-
-            // 保存用户列表
-            function saveUsers(users) {
-                localStorage.setItem('users', JSON.stringify(users));
             }
 
             // 检查保存的主题偏好

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的个人导航</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary-color: #3498db;
@@ -11,16 +12,18 @@
             --background-color: #f9f9f9;
             --card-bg: #ffffff;
             --text-color: #333333;
-            --border-radius: 8px;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
         }
 
         [data-theme="dark"] {
-            --primary-color: #3498db;
+            --primary-color: #3ca0e7;
             --secondary-color: #34495e;
             --background-color: #1a1a1a;
             --card-bg: #2d2d2d;
             --text-color: #e0e0e0;
+            --shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
         }
 
         * {
@@ -33,9 +36,10 @@
         body {
             background-color: var(--background-color);
             color: var(--text-color);
-            transition: all 0.3s ease;
+            transition: var(--transition);
             min-height: 100vh;
             padding: 20px;
+            line-height: 1.6;
         }
 
         .container {
@@ -49,53 +53,30 @@
             align-items: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(128, 128, 128, 0.2);
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
         }
 
         .logo h1 {
             font-size: 1.8rem;
             color: var(--primary-color);
+            font-weight: 700;
         }
 
         .controls {
             display: flex;
             gap: 15px;
             align-items: center;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-
-        .user-avatar {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .permission-display {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: bold;
         }
 
         .search-container {
@@ -105,12 +86,27 @@
 
         .search-container input {
             width: 100%;
-            padding: 10px 15px;
+            padding: 12px 45px 12px 15px;
             border-radius: var(--border-radius);
-            border: 1px solid #ddd;
+            border: 1px solid rgba(128, 128, 128, 0.3);
             background-color: var(--card-bg);
             color: var(--text-color);
             font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .search-container input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
         }
 
         .theme-toggle, .add-btn {
@@ -119,19 +115,21 @@
             font-size: 1.2rem;
             cursor: pointer;
             color: var(--text-color);
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             background-color: var(--card-bg);
-            transition: all 0.2s ease;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
         }
 
         .theme-toggle:hover, .add-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: var(--primary-color);
+            color: white;
         }
 
         .categories {
@@ -143,15 +141,16 @@
         }
 
         .category-btn {
-            padding: 8px 16px;
+            padding: 10px 20px;
             background-color: var(--card-bg);
             border: none;
             border-radius: var(--border-radius);
             cursor: pointer;
             color: var(--text-color);
-            transition: all 0.2s ease;
+            transition: var(--transition);
             white-space: nowrap;
             box-shadow: var(--shadow);
+            font-weight: 500;
         }
 
         .category-btn.active {
@@ -159,81 +158,102 @@
             color: white;
         }
 
-        .category-btn:hover {
-            transform: translateY(-2px);
+        .category-btn:hover:not(.active) {
+            transform: translateY(-3px);
+            background-color: rgba(52, 152, 219, 0.1);
         }
 
         .links-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
             margin-bottom: 30px;
         }
 
         .link-card {
             background-color: var(--card-bg);
             border-radius: var(--border-radius);
-            padding: 20px;
+            padding: 25px;
             box-shadow: var(--shadow);
-            transition: transform 0.2s ease;
+            transition: var(--transition);
             cursor: pointer;
             text-decoration: none;
             color: inherit;
             display: block;
             position: relative;
+            border: 1px solid rgba(128, 128, 128, 0.1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .link-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
         }
 
         .link-card .icon {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
             color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(52, 152, 219, 0.1);
         }
 
         .link-card h3 {
-            margin-bottom: 5px;
-            font-size: 1.1rem;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            font-weight: 600;
         }
 
         .link-card p {
             color: #777;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            flex-grow: 1;
         }
 
-        .permission-tag {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: var(--primary-color);
-            color: white;
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 10px;
+        .link-card .category-tag {
+            display: inline-block;
+            background-color: rgba(52, 152, 219, 0.1);
+            color: var(--primary-color);
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-top: 15px;
+            font-weight: 500;
         }
 
         .delete-btn {
             position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.1);
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.08);
             border: none;
             border-radius: 50%;
-            width: 25px;
-            height: 25px;
+            width: 30px;
+            height: 30px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem;
+            font-size: 1rem;
             opacity: 0;
-            transition: opacity 0.2s;
+            transition: var(--transition);
+            color: #777;
         }
 
         .link-card:hover .delete-btn {
             opacity: 1;
+        }
+
+        .delete-btn:hover {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
         }
 
         .modal {
@@ -243,26 +263,28 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.6);
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(5px);
         }
 
         .modal-content {
             background-color: var(--card-bg);
-            padding: 30px;
+            padding: 35px;
             border-radius: var(--border-radius);
             width: 90%;
             max-width: 500px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
             animation: modalFadeIn 0.3s ease;
+            border: 1px solid rgba(128, 128, 128, 0.1);
         }
 
         @keyframes modalFadeIn {
             from {
                 opacity: 0;
-                transform: translateY(-20px);
+                transform: translateY(-25px);
             }
             to {
                 opacity: 1;
@@ -274,21 +296,28 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             padding-bottom: 15px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(128, 128, 128, 0.2);
         }
 
         .modal-header h2 {
             color: var(--primary-color);
+            font-weight: 600;
         }
 
         .close-btn {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             cursor: pointer;
             color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            color: var(--primary-color);
+            transform: scale(1.1);
         }
 
         .form-group {
@@ -299,33 +328,43 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
+            color: var(--text-color);
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
-            padding: 10px 15px;
+            padding: 12px 15px;
             border-radius: var(--border-radius);
-            border: 1px solid #ddd;
+            border: 1px solid rgba(128, 128, 128, 0.3);
             background-color: var(--card-bg);
             color: var(--text-color);
             font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
         }
 
         .form-actions {
             display: flex;
             justify-content: flex-end;
-            gap: 10px;
+            gap: 12px;
             margin-top: 25px;
         }
 
         .btn {
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
             border-radius: var(--border-radius);
             cursor: pointer;
             font-weight: 500;
-            transition: all 0.2s ease;
+            transition: var(--transition);
+            font-size: 1rem;
         }
 
         .btn-primary {
@@ -334,30 +373,82 @@
         }
 
         .btn-secondary {
-            background-color: #e0e0e0;
-            color: #333;
+            background-color: rgba(128, 128, 128, 0.1);
+            color: var(--text-color);
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
 
-        .login-message {
-            margin-top: 15px;
-            text-align: center;
-            color: #e74c3c;
-            font-size: 0.9rem;
+        .btn-secondary:hover {
+            background-color: rgba(128, 128, 128, 0.2);
         }
 
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
+            padding: 60px 20px;
             color: #777;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: rgba(128, 128, 128, 0.5);
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--text-color);
         }
 
         .empty-state p {
-            margin-top: 10px;
+            font-size: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(128, 128, 128, 0.2);
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .search-container {
+                width: 100%;
+            }
+            
+            .controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .links-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                padding: 25px 20px;
+            }
         }
     </style>
 </head>
@@ -365,20 +456,20 @@
     <div class="container">
         <header>
             <div class="logo">
+                <i class="fas fa-compass logo-icon"></i>
                 <h1>我的导航</h1>
             </div>
             <div class="controls">
                 <div class="search-container">
                     <input type="text" placeholder="搜索网站..." id="search-input">
+                    <i class="fas fa-search search-icon"></i>
                 </div>
-                <button class="theme-toggle" id="theme-toggle">
-                    <span id="theme-icon">🌙</span>
+                <button class="theme-toggle" id="theme-toggle" title="切换主题">
+                    <i class="fas fa-moon" id="theme-icon"></i>
                 </button>
-                <button class="add-btn" id="add-link-btn">+</button>
-                <div class="user-info" id="user-info">
-                    <div class="user-avatar">U</div>
-                    <div class="permission-display">访客</div>
-                </div>
+                <button class="add-btn" id="add-link-btn" title="添加新链接">
+                    <i class="fas fa-plus"></i>
+                </button>
             </div>
         </header>
 
@@ -388,6 +479,7 @@
             <button class="category-btn" data-category="study">学习</button>
             <button class="category-btn" data-category="entertainment">娱乐</button>
             <button class="category-btn" data-category="tools">工具</button>
+            <button class="category-btn" data-category="shopping">购物</button>
         </div>
 
         <div class="links-grid" id="links-grid">
@@ -404,15 +496,15 @@
                 <form id="add-link-form">
                     <div class="form-group">
                         <label for="link-name">网站名称</label>
-                        <input type="text" id="link-name" required>
+                        <input type="text" id="link-name" required placeholder="例如：GitHub">
                     </div>
                     <div class="form-group">
                         <label for="link-url">网站地址</label>
-                        <input type="url" id="link-url" required>
+                        <input type="url" id="link-url" required placeholder="https://example.com">
                     </div>
                     <div class="form-group">
                         <label for="link-description">描述</label>
-                        <input type="text" id="link-description">
+                        <input type="text" id="link-description" placeholder="网站的功能描述">
                     </div>
                     <div class="form-group">
                         <label for="link-category">分类</label>
@@ -421,6 +513,7 @@
                             <option value="study">学习</option>
                             <option value="entertainment">娱乐</option>
                             <option value="tools">工具</option>
+                            <option value="shopping">购物</option>
                         </select>
                     </div>
                     <div class="form-actions">
@@ -430,31 +523,10 @@
                 </form>
             </div>
         </div>
-
-        <!-- 登录模态框 -->
-        <div class="modal" id="login-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>用户登录</h2>
-                    <button class="close-btn" id="close-login-modal">&times;</button>
-                </div>
-                <form id="login-form">
-                    <div class="form-group">
-                        <label for="username">用户名</label>
-                        <input type="text" id="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">密码</label>
-                        <input type="password" id="password" required>
-                    </div>
-                    <div class="login-message" id="login-message"></div>
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" id="cancel-login">取消</button>
-                        <button type="submit" class="btn btn-primary">登录</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+        
+        <footer>
+            <p>© 2023 我的个人导航 | 简洁实用，高效导航</p>
+        </footer>
     </div>
 
     <script>
@@ -464,17 +536,17 @@
                 id: 1,
                 name: "GitHub",
                 url: "https://github.com",
-                description: "代码托管平台",
+                description: "全球最大的代码托管平台",
                 category: "work",
-                icon: "💻"
+                icon: "fab fa-github"
             },
             {
                 id: 2,
                 name: "MDN Web Docs",
                 url: "https://developer.mozilla.org",
-                description: "Web开发文档",
+                description: "Web开发技术文档",
                 category: "study",
-                icon: "📚"
+                icon: "fas fa-code"
             },
             {
                 id: 3,
@@ -482,7 +554,7 @@
                 url: "https://youtube.com",
                 description: "视频分享平台",
                 category: "entertainment",
-                icon: "📺"
+                icon: "fab fa-youtube"
             },
             {
                 id: 4,
@@ -490,15 +562,46 @@
                 url: "https://translate.google.com",
                 description: "在线翻译工具",
                 category: "tools",
-                icon: "🌐"
+                icon: "fas fa-language"
+            },
+            {
+                id: 5,
+                name: "知乎",
+                url: "https://zhihu.com",
+                description: "中文问答社区",
+                category: "entertainment",
+                icon: "fas fa-question-circle"
+            },
+            {
+                id: 6,
+                name: "京东",
+                url: "https://jd.com",
+                description: "综合网购商城",
+                category: "shopping",
+                icon: "fas fa-shopping-bag"
+            },
+            {
+                id: 7,
+                name: "Stack Overflow",
+                url: "https://stackoverflow.com",
+                description: "程序员问答社区",
+                category: "study",
+                icon: "fab fa-stack-overflow"
+            },
+            {
+                id: 8,
+                name: "Can I use",
+                url: "https://caniuse.com",
+                description: "Web技术兼容性查询",
+                category: "tools",
+                icon: "fas fa-check-circle"
             }
         ];
 
         // 状态管理
         let links = JSON.parse(localStorage.getItem('links')) || sampleLinks;
         let currentCategory = 'all';
-        let currentUser = localStorage.getItem('currentUser') || null;
-
+        
         // DOM元素
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = document.getElementById('theme-icon');
@@ -510,17 +613,10 @@
         const linksGrid = document.getElementById('links-grid');
         const categoryBtns = document.querySelectorAll('.category-btn');
         const searchInput = document.getElementById('search-input');
-        const userInfo = document.getElementById('user-info');
-        const loginModal = document.getElementById('login-modal');
-        const closeLoginModal = document.getElementById('close-login-modal');
-        const cancelLogin = document.getElementById('cancel-login');
-        const loginForm = document.getElementById('login-form');
-        const loginMessage = document.getElementById('login-message');
 
         // 初始化
         function init() {
             renderLinks();
-            updateUserInfo();
             
             // 主题切换
             themeToggle.addEventListener('click', toggleTheme);
@@ -544,17 +640,17 @@
             // 搜索功能
             searchInput.addEventListener('input', renderLinks);
             
-            // 用户登录功能
-            userInfo.addEventListener('click', () => showModal(loginModal));
-            closeLoginModal.addEventListener('click', () => hideModal(loginModal));
-            cancelLogin.addEventListener('click', () => hideModal(loginModal));
-            loginForm.addEventListener('submit', handleLogin);
-            
             // 点击模态框外部关闭
             window.addEventListener('click', (e) => {
                 if (e.target === addLinkModal) hideModal(addLinkModal);
-                if (e.target === loginModal) hideModal(loginModal);
             });
+            
+            // 应用保存的主题
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeIcon.className = 'fas fa-sun';
+            }
         }
 
         // 渲染链接
@@ -571,6 +667,7 @@
             if (filteredLinks.length === 0) {
                 linksGrid.innerHTML = `
                     <div class="empty-state">
+                        <i class="fas fa-search"></i>
                         <h3>没有找到匹配的链接</h3>
                         <p>尝试更改搜索条件或添加新链接</p>
                     </div>
@@ -580,11 +677,15 @@
             
             linksGrid.innerHTML = filteredLinks.map(link => `
                 <a href="${link.url}" target="_blank" class="link-card" data-id="${link.id}">
-                    <div class="icon">${link.icon}</div>
+                    <div class="icon">
+                        <i class="${link.icon}"></i>
+                    </div>
                     <h3>${link.name}</h3>
                     <p>${link.description}</p>
-                    <span class="permission-tag">${link.category}</span>
-                    <button class="delete-btn" onclick="deleteLink(event, ${link.id})">×</button>
+                    <span class="category-tag">${getCategoryName(link.category)}</span>
+                    <button class="delete-btn" onclick="deleteLink(event, ${link.id})">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </a>
             `).join('');
         }
@@ -601,7 +702,7 @@
             const newLink = {
                 id: Date.now(),
                 name,
-                url,
+                url: url.startsWith('http') ? url : `https://${url}`,
                 description,
                 category,
                 icon: getIconByCategory(category)
@@ -634,12 +735,25 @@
         // 根据分类获取图标
         function getIconByCategory(category) {
             const icons = {
-                work: '💼',
-                study: '📚',
-                entertainment: '🎮',
-                tools: '🔧'
+                work: 'fas fa-briefcase',
+                study: 'fas fa-graduation-cap',
+                entertainment: 'fas fa-gamepad',
+                tools: 'fas fa-tools',
+                shopping: 'fas fa-shopping-cart'
             };
-            return icons[category] || '🔗';
+            return icons[category] || 'fas fa-link';
+        }
+        
+        // 根据分类键获取分类名称
+        function getCategoryName(categoryKey) {
+            const categoryNames = {
+                work: '工作',
+                study: '学习',
+                entertainment: '娱乐',
+                tools: '工具',
+                shopping: '购物'
+            };
+            return categoryNames[categoryKey] || '其他';
         }
 
         // 切换主题
@@ -647,11 +761,11 @@
             const currentTheme = document.documentElement.getAttribute('data-theme');
             if (currentTheme === 'dark') {
                 document.documentElement.removeAttribute('data-theme');
-                themeIcon.textContent = '🌙';
+                themeIcon.className = 'fas fa-moon';
                 localStorage.setItem('theme', 'light');
             } else {
                 document.documentElement.setAttribute('data-theme', 'dark');
-                themeIcon.textContent = '☀️';
+                themeIcon.className = 'fas fa-sun';
                 localStorage.setItem('theme', 'dark');
             }
         }
@@ -664,47 +778,6 @@
         // 隐藏模态框
         function hideModal(modal) {
             modal.style.display = 'none';
-            loginMessage.textContent = '';
-        }
-
-        // 用户登录处理
-        function handleLogin(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            // 简单模拟登录验证
-            if (username === 'admin' && password === 'password') {
-                currentUser = { username, role: '管理员' };
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                updateUserInfo();
-                hideModal(loginModal);
-                loginForm.reset();
-            } else {
-                loginMessage.textContent = '用户名或密码错误，请重试';
-            }
-        }
-
-        // 更新用户信息显示
-        function updateUserInfo() {
-            const userAvatar = document.querySelector('.user-avatar');
-            const permissionDisplay = document.querySelector('.permission-display');
-            
-            if (currentUser) {
-                userAvatar.textContent = currentUser.username.charAt(0).toUpperCase();
-                permissionDisplay.textContent = currentUser.role;
-            } else {
-                userAvatar.textContent = 'U';
-                permissionDisplay.textContent = '访客';
-            }
-        }
-
-        // 应用保存的主题
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            themeIcon.textContent = '☀️';
         }
 
         // 初始化应用

@@ -112,7 +112,7 @@
             font-size: 1rem;
         }
 
-        .theme-toggle, .add-btn, .user-btn {
+        .theme-toggle, .add-btn {
             background: none;
             border: none;
             font-size: 1.2rem;
@@ -128,7 +128,7 @@
             transition: all 0.2s ease;
         }
 
-        .theme-toggle:hover, .add-btn:hover, .user-btn:hover {
+        .theme-toggle:hover, .add-btn:hover {
             transform: scale(1.1);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
@@ -445,86 +445,6 @@
             font-size: 1rem;
         }
 
-        /* 登录模态框样式 */
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .login-input {
-            padding: 12px 15px;
-            border-radius: var(--border-radius);
-            border: 1px solid #ddd;
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            font-size: 1rem;
-        }
-
-        .login-btn {
-            padding: 12px 15px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-        }
-
-        .login-btn:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-        }
-
-        .error-message {
-            color: #e74c3c;
-            font-size: 0.9rem;
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        /* 用户管理菜单样式 */
-        .user-menu {
-            position: relative;
-            display: inline-block;
-        }
-
-        .user-menu-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 100%;
-            background-color: var(--card-bg);
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            margin-top: 5px;
-        }
-
-        .user-menu-content button {
-            color: var(--text-color);
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            width: 100%;
-            text-align: left;
-            border: none;
-            background: none;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-
-        .user-menu-content button:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-
-        .user-menu.show .user-menu-content {
-            display: block;
-        }
-
         /* 权限说明区域 */
         .permission-info {
             background-color: var(--card-bg);
@@ -606,6 +526,35 @@
             transform: translateY(-2px);
         }
 
+        /* 手动登录表单 */
+        .manual-login {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+
+        .manual-login h4 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .manual-login-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .manual-login-input {
+            flex: 1;
+            min-width: 150px;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            border: 1px solid #ddd;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -632,6 +581,10 @@
             .login-buttons {
                 flex-direction: column;
             }
+            
+            .manual-login-form {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -649,12 +602,6 @@
                     <input type="text" id="search-input" placeholder="搜索网站...">
                 </div>
                 <button class="add-btn" id="add-btn" style="display: none;">+</button>
-                <div class="user-menu" id="user-menu-container">
-                    <button class="user-btn" id="user-btn">👤</button>
-                    <div class="user-menu-content" id="user-menu">
-                        <!-- 用户菜单内容将通过JavaScript动态生成 -->
-                    </div>
-                </div>
                 <button class="theme-toggle" id="theme-toggle">🌙</button>
             </div>
         </header>
@@ -666,6 +613,19 @@
                 <button class="login-btn-small" id="admin-login">管理员登录</button>
                 <button class="login-btn-small" id="user-login">用户登录</button>
                 <button class="login-btn-small" id="guest-login">访客登录</button>
+            </div>
+            
+            <!-- 手动登录表单 -->
+            <div class="manual-login">
+                <h4>手动登录</h4>
+                <div class="manual-login-form">
+                    <input type="text" class="manual-login-input" id="manual-username" placeholder="用户名">
+                    <input type="password" class="manual-login-input" id="manual-password" placeholder="密码">
+                    <button class="login-btn-small" id="manual-login-btn">登录</button>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.8rem; color: #777;">
+                    <p>默认账户: admin/admin123, user/user123, guest/guest123</p>
+                </div>
             </div>
         </div>
 
@@ -734,28 +694,6 @@
             <p>© 2025 个人导航中心</p>
             <div class="runtime" id="runtime">页面已运行: 0天 0小时 0分钟 0秒</div>
         </footer>
-    </div>
-
-    <!-- 登录模态框 -->
-    <div class="modal" id="login-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>用户登录</h2>
-                <button class="close-btn" id="close-login-modal">&times;</button>
-            </div>
-            <form class="login-form" id="login-form">
-                <input type="text" class="login-input" id="login-username" placeholder="用户名" required>
-                <input type="password" class="login-input" id="login-password" placeholder="密码" required>
-                <button type="submit" class="login-btn">登录</button>
-                <div class="error-message" id="login-error"></div>
-            </form>
-            <div style="margin-top: 20px; text-align: center;">
-                <h3>默认账户</h3>
-                <p>管理员: admin / admin123</p>
-                <p>用户: user / user123</p>
-                <p>访客: guest / guest123</p>
-            </div>
-        </div>
     </div>
 
     <!-- 添加项目的模态框 -->
@@ -907,18 +845,12 @@
             const searchInput = document.getElementById('search-input');
             const themeToggle = document.getElementById('theme-toggle');
             const addBtn = document.getElementById('add-btn');
-            const userBtn = document.getElementById('user-btn');
-            const userMenuContainer = document.getElementById('user-menu-container');
-            const userMenu = document.getElementById('user-menu');
-            const loginModal = document.getElementById('login-modal');
             const addModal = document.getElementById('add-modal');
             const passwordModal = document.getElementById('password-modal');
-            const closeLoginModal = document.getElementById('close-login-modal');
             const closeModal = document.getElementById('close-modal');
             const closePasswordModal = document.getElementById('close-password-modal');
             const cancelBtn = document.getElementById('cancel-btn');
             const cancelPasswordBtn = document.getElementById('cancel-password-btn');
-            const loginForm = document.getElementById('login-form');
             const addForm = document.getElementById('add-form');
             const passwordForm = document.getElementById('password-form');
             const searchEngineForm = document.getElementById('search-engine-form');
@@ -928,11 +860,13 @@
             const userInfo = document.getElementById('user-info');
             const permissionControls = document.getElementById('permission-controls');
             const runtimeElement = document.getElementById('runtime');
-            const loginError = document.getElementById('login-error');
             const quickLogin = document.getElementById('quick-login');
             const adminLoginBtn = document.getElementById('admin-login');
             const userLoginBtn = document.getElementById('user-login');
             const guestLoginBtn = document.getElementById('guest-login');
+            const manualLoginBtn = document.getElementById('manual-login-btn');
+            const manualUsername = document.getElementById('manual-username');
+            const manualPassword = document.getElementById('manual-password');
             
             // 从本地存储加载数据
             loadFromLocalStorage();
@@ -961,17 +895,6 @@
                 }
             });
             
-            // 用户菜单显示/隐藏控制
-            userBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                userMenuContainer.classList.toggle('show');
-            });
-            
-            // 点击页面其他地方时关闭用户菜单
-            document.addEventListener('click', function() {
-                userMenuContainer.classList.remove('show');
-            });
-            
             // 快速登录按钮事件
             adminLoginBtn.addEventListener('click', function() {
                 handleLogin('admin', 'admin123');
@@ -983,6 +906,19 @@
             
             guestLoginBtn.addEventListener('click', function() {
                 handleLogin('guest', 'guest123');
+            });
+            
+            // 手动登录按钮事件
+            manualLoginBtn.addEventListener('click', function() {
+                const username = manualUsername.value.trim();
+                const password = manualPassword.value.trim();
+                
+                if (!username || !password) {
+                    alert('请输入用户名和密码！');
+                    return;
+                }
+                
+                handleLogin(username, password);
             });
             
             // 渲染链接卡片
@@ -1048,10 +984,15 @@
                     <div class="user-avatar">${currentUser.avatar}</div>
                     <span>${currentUser.username}</span>
                     <div class="permission-display">${currentUser.role}</div>
+                    ${currentUser.id !== 0 ? `<button class="login-btn-small" id="logout-btn" style="margin-left: 10px;">退出登录</button>` : ''}
                 `;
                 
-                // 更新用户菜单
-                updateUserMenu();
+                // 添加退出登录按钮事件
+                if (currentUser.id !== 0) {
+                    document.getElementById('logout-btn').addEventListener('click', function() {
+                        logout();
+                    });
+                }
                 
                 // 根据用户权限显示/隐藏功能
                 if (currentUser.role === 'admin') {
@@ -1071,49 +1012,6 @@
                 // 重新渲染链接
                 renderLinks(linksData);
             }
-            
-            // 更新用户菜单
-            function updateUserMenu() {
-                if (currentUser.id === 0) {
-                    // 未登录状态
-                    userMenu.innerHTML = `
-                        <button id="manual-login-btn">手动登录</button>
-                    `;
-                } else {
-                    // 已登录状态
-                    userMenu.innerHTML = `
-                        <button id="change-password-menu-btn">修改密码</button>
-                        <button id="logout-menu-btn">退出登录</button>
-                    `;
-                }
-                
-                // 添加菜单按钮事件监听器
-                if (currentUser.id === 0) {
-                    const manualLoginBtn = document.getElementById('manual-login-btn');
-                    if (manualLoginBtn) {
-                        manualLoginBtn.addEventListener('click', function() {
-                            loginModal.style.display = 'flex';
-                            userMenuContainer.classList.remove('show');
-                        });
-                    }
-                } else {
-                    const changePasswordMenuBtn = document.getElementById('change-password-menu-btn');
-                    if (changePasswordMenuBtn) {
-                        changePasswordMenuBtn.addEventListener('click', function() {
-                            passwordModal.style.display = 'flex';
-                            userMenuContainer.classList.remove('show');
-                        });
-                    }
-                    
-                    const logoutMenuBtn = document.getElementById('logout-menu-btn');
-                    if (logoutMenuBtn) {
-                        logoutMenuBtn.addEventListener('click', function() {
-                            logout();
-                            userMenuContainer.classList.remove('show');
-                        });
-                    }
-                }
-            }
 
             // 处理登录
             function handleLogin(username, password) {
@@ -1124,8 +1022,11 @@
                     currentUser = user;
                     saveCurrentUser(user);
                     updateUserInterface();
-                    closeLoginModal();
                     alert(`登录成功！欢迎 ${user.username} (${user.role})`);
+                    
+                    // 清空手动登录表单
+                    manualUsername.value = '';
+                    manualPassword.value = '';
                 } else {
                     alert('用户名或密码错误！');
                 }
@@ -1209,15 +1110,6 @@
             closeModal.addEventListener('click', closeAddModal);
             cancelBtn.addEventListener('click', closeAddModal);
 
-            // 关闭登录模态框
-            function closeLoginModal() {
-                loginModal.style.display = 'none';
-                loginForm.reset();
-                loginError.textContent = '';
-            }
-
-            closeLoginModal.addEventListener('click', closeLoginModal);
-
             // 关闭修改密码模态框
             function closePasswordModal() {
                 passwordModal.style.display = 'none';
@@ -1226,16 +1118,6 @@
 
             closePasswordModal.addEventListener('click', closePasswordModal);
             cancelPasswordBtn.addEventListener('click', closePasswordModal);
-
-            // 登录功能
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const username = document.getElementById('login-username').value;
-                const password = document.getElementById('login-password').value;
-                
-                handleLogin(username, password);
-            });
 
             // 添加新网站
             addForm.addEventListener('submit', function(e) {

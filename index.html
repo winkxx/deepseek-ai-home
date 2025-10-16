@@ -109,7 +109,7 @@
             color: #aaa;
         }
 
-        .theme-toggle, .add-btn {
+        .theme-toggle, .add-btn, .import-export-btn {
             background: none;
             border: none;
             font-size: 1.2rem;
@@ -126,7 +126,7 @@
             box-shadow: var(--shadow);
         }
 
-        .theme-toggle:hover, .add-btn:hover {
+        .theme-toggle:hover, .add-btn:hover, .import-export-btn:hover {
             transform: scale(1.1);
             background-color: var(--primary-color);
             color: white;
@@ -168,6 +168,39 @@
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 25px;
             margin-bottom: 30px;
+        }
+
+        .iframe-section {
+            display: flex;
+            flex-direction: column;
+            height: 500px;
+            margin-bottom: 30px;
+        }
+
+        .iframe-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            box-shadow: var(--shadow);
+            margin-bottom: 0;
+        }
+
+        .iframe-container {
+            flex-grow: 1;
+            display: flex;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
         .link-card {
@@ -228,10 +261,21 @@
             font-weight: 500;
         }
 
-        .delete-btn {
+        .card-actions {
             position: absolute;
             top: 15px;
             right: 15px;
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .link-card:hover .card-actions {
+            opacity: 1;
+        }
+
+        .edit-btn, .delete-btn {
             background: rgba(0, 0, 0, 0.08);
             border: none;
             border-radius: 50%;
@@ -241,14 +285,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
-            opacity: 0;
+            font-size: 0.9rem;
             transition: var(--transition);
             color: #777;
         }
 
-        .link-card:hover .delete-btn {
-            opacity: 1;
+        .edit-btn:hover {
+            background-color: rgba(52, 152, 219, 0.2);
+            color: var(--primary-color);
         }
 
         .delete-btn:hover {
@@ -332,7 +376,8 @@
         }
 
         .form-group input,
-        .form-group select {
+        .form-group select,
+        .form-group textarea {
             width: 100%;
             padding: 12px 15px;
             border-radius: var(--border-radius);
@@ -344,10 +389,35 @@
         }
 
         .form-group input:focus,
-        .form-group select:focus {
+        .form-group select:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .icon-preview {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .icon-preview .preview {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(52, 152, 219, 0.1);
         }
 
         .form-actions {
@@ -411,6 +481,16 @@
             margin: 0 auto;
         }
 
+        .import-export-modal {
+            max-width: 600px;
+        }
+
+        .json-textarea {
+            min-height: 200px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
         footer {
             text-align: center;
             margin-top: 50px;
@@ -439,6 +519,10 @@
             .links-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             }
+            
+            .iframe-section {
+                height: 400px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -449,6 +533,18 @@
             .modal-content {
                 padding: 25px 20px;
             }
+            
+            .controls {
+                gap: 10px;
+            }
+            
+            .search-container {
+                width: 180px;
+            }
+            
+            .iframe-section {
+                height: 300px;
+            }
         }
     </style>
 </head>
@@ -457,7 +553,7 @@
         <header>
             <div class="logo">
                 <i class="fas fa-compass logo-icon"></i>
-                <h1>我的导航</h1>
+                <h1>MOYU导航</h1>
             </div>
             <div class="controls">
                 <div class="search-container">
@@ -467,33 +563,45 @@
                 <button class="theme-toggle" id="theme-toggle" title="切换主题">
                     <i class="fas fa-moon" id="theme-icon"></i>
                 </button>
+                <button class="import-export-btn" id="import-export-btn" title="导入/导出数据">
+                    <i class="fas fa-file-export"></i>
+                </button>
                 <button class="add-btn" id="add-link-btn" title="添加新链接">
                     <i class="fas fa-plus"></i>
                 </button>
             </div>
         </header>
 
-        <div class="categories">
+        <div class="categories" id="categories-container">
             <button class="category-btn active" data-category="all">全部</button>
-            <button class="category-btn" data-category="work">工作</button>
-            <button class="category-btn" data-category="study">学习</button>
-            <button class="category-btn" data-category="entertainment">娱乐</button>
-            <button class="category-btn" data-category="tools">工具</button>
-            <button class="category-btn" data-category="shopping">购物</button>
+            <!-- 分类将通过JavaScript动态添加 -->
         </div>
 
         <div class="links-grid" id="links-grid">
             <!-- 链接卡片将通过JavaScript动态添加 -->
         </div>
 
-        <!-- 添加链接的模态框 -->
-        <div class="modal" id="add-link-modal">
+        <div class="iframe-section">
+            <div class="iframe-header">
+                <h3>内嵌网页</h3>
+                <button class="close-btn" id="refresh-iframe" title="刷新网页">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+            <div class="iframe-container">
+                <iframe src="https://tz.443777.xyz/" id="embedded-website"></iframe>
+            </div>
+        </div>
+
+        <!-- 添加/编辑链接的模态框 -->
+        <div class="modal" id="link-modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2>添加新链接</h2>
-                    <button class="close-btn" id="close-add-modal">&times;</button>
+                    <h2 id="modal-title">添加新链接</h2>
+                    <button class="close-btn" id="close-modal">&times;</button>
                 </div>
-                <form id="add-link-form">
+                <form id="link-form">
+                    <input type="hidden" id="link-id">
                     <div class="form-group">
                         <label for="link-name">网站名称</label>
                         <input type="text" id="link-name" required placeholder="例如：GitHub">
@@ -504,33 +612,58 @@
                     </div>
                     <div class="form-group">
                         <label for="link-description">描述</label>
-                        <input type="text" id="link-description" placeholder="网站的功能描述">
+                        <textarea id="link-description" placeholder="网站的功能描述"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="link-category">分类</label>
-                        <select id="link-category">
-                            <option value="work">工作</option>
-                            <option value="study">学习</option>
-                            <option value="entertainment">娱乐</option>
-                            <option value="tools">工具</option>
-                            <option value="shopping">购物</option>
-                        </select>
+                        <input type="text" id="link-category" list="categories-list" placeholder="输入或选择分类" required>
+                        <datalist id="categories-list">
+                            <!-- 分类选项将通过JavaScript动态添加 -->
+                        </datalist>
+                    </div>
+                    <div class="form-group">
+                        <label for="link-icon">图标类名</label>
+                        <input type="text" id="link-icon" placeholder="例如：fab fa-github">
+                        <div class="icon-preview">
+                            <span>预览:</span>
+                            <div class="preview">
+                                <i id="icon-preview" class="fas fa-link"></i>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" id="cancel-add">取消</button>
-                        <button type="submit" class="btn btn-primary">添加</button>
+                        <button type="button" class="btn btn-secondary" id="cancel-btn">取消</button>
+                        <button type="submit" class="btn btn-primary" id="submit-btn">添加</button>
                     </div>
                 </form>
             </div>
         </div>
+
+        <!-- 导入/导出模态框 -->
+        <div class="modal" id="import-export-modal">
+            <div class="modal-content import-export-modal">
+                <div class="modal-header">
+                    <h2>数据管理</h2>
+                    <button class="close-btn" id="close-import-export">&times;</button>
+                </div>
+                <div class="form-group">
+                    <label for="json-data">JSON数据 (复制此数据进行备份，或粘贴数据以恢复)</label>
+                    <textarea id="json-data" class="json-textarea"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="import-btn">导入数据</button>
+                    <button type="button" class="btn btn-primary" id="export-btn">导出数据</button>
+                </div>
+            </div>
+        </div>
         
         <footer>
-            <p>© 2023 我的个人导航 | 简洁实用，高效导航</p>
+            <p>© 2023 MOYU导航 | 简洁实用，高效导航</p>
         </footer>
     </div>
 
     <script>
-        // 示例数据
+        // 示例数据 - 包含您之前代码中的所有网站链接
         const sampleLinks = [
             {
                 id: 1,
@@ -542,14 +675,6 @@
             },
             {
                 id: 2,
-                name: "MDN Web Docs",
-                url: "https://developer.mozilla.org",
-                description: "Web开发技术文档",
-                category: "study",
-                icon: "fas fa-code"
-            },
-            {
-                id: 3,
                 name: "YouTube",
                 url: "https://youtube.com",
                 description: "视频分享平台",
@@ -557,23 +682,7 @@
                 icon: "fab fa-youtube"
             },
             {
-                id: 4,
-                name: "Google翻译",
-                url: "https://translate.google.com",
-                description: "在线翻译工具",
-                category: "tools",
-                icon: "fas fa-language"
-            },
-            {
-                id: 5,
-                name: "知乎",
-                url: "https://zhihu.com",
-                description: "中文问答社区",
-                category: "entertainment",
-                icon: "fas fa-question-circle"
-            },
-            {
-                id: 6,
+                id: 3,
                 name: "京东",
                 url: "https://jd.com",
                 description: "综合网购商城",
@@ -581,7 +690,7 @@
                 icon: "fas fa-shopping-bag"
             },
             {
-                id: 7,
+                id: 4,
                 name: "Stack Overflow",
                 url: "https://stackoverflow.com",
                 description: "程序员问答社区",
@@ -589,60 +698,200 @@
                 icon: "fab fa-stack-overflow"
             },
             {
-                id: 8,
-                name: "Can I use",
-                url: "https://caniuse.com",
-                description: "Web技术兼容性查询",
+                id: 5,
+                name: "Google",
+                url: "https://google.com",
+                description: "全球最大的搜索引擎",
                 category: "tools",
-                icon: "fas fa-check-circle"
+                icon: "fab fa-google"
+            },
+            {
+                id: 6,
+                name: "百度",
+                url: "https://baidu.com",
+                description: "中文搜索引擎",
+                category: "tools",
+                icon: "fas fa-search"
+            },
+            {
+                id: 7,
+                name: "淘宝",
+                url: "https://taobao.com",
+                description: "网购零售平台",
+                category: "shopping",
+                icon: "fas fa-shopping-cart"
+            },
+            {
+                id: 8,
+                name: "Bilibili",
+                url: "https://bilibili.com",
+                description: "视频分享和弹幕网站",
+                category: "entertainment",
+                icon: "fas fa-play-circle"
+            },
+            {
+                id: 9,
+                name: "网易云音乐",
+                url: "https://music.163.com",
+                description: "在线音乐平台",
+                category: "entertainment",
+                icon: "fas fa-music"
+            },
+            {
+                id: 10,
+                name: "CSDN",
+                url: "https://csdn.net",
+                description: "IT技术社区",
+                category: "study",
+                icon: "fas fa-laptop-code"
+            },
+            {
+                id: 11,
+                name: "LeetCode",
+                url: "https://leetcode.com",
+                description: "编程练习平台",
+                category: "study",
+                icon: "fas fa-code"
+            },
+            {
+                id: 12,
+                name: "阿里云",
+                url: "https://aliyun.com",
+                description: "云计算服务平台",
+                category: "work",
+                icon: "fas fa-cloud"
+            },
+            {
+                id: 13,
+                name: "腾讯云",
+                url: "https://cloud.tencent.com",
+                description: "云计算服务平台",
+                category: "work",
+                icon: "fas fa-server"
+            },
+            {
+                id: 14,
+                name: "百度云",
+                url: "https://cloud.baidu.com",
+                description: "云计算服务平台",
+                category: "work",
+                icon: "fas fa-database"
+            },
+            {
+                id: 15,
+                name: "探针",
+                url: "https://tz.443777.xyz",
+                description: "自建探针",
+                category: "work",
+                icon: "fas fa-server"
+            },
+            {
+                id: 16,
+                name: "椰子转发",
+                url: "https://nya.trp.sh",
+                description: "IEPL转发",
+                category: "work",
+                icon: "fas fa-server"
+            },
+            {
+                id: 17,
+                name: "低调转发",
+                url: "https://didiaozhuanfa.uk",
+                description: "隧道转发",
+                category: "work",
+                icon: "fas fa-server"
+            }
+            {
+                id: 18,
+                name: "日本管理面板",
+                url: "http://control.winkxr.de",
+                description: "Zgo-日本中控宝塔面板",
+                category: "work",
+                icon: "fas fa-server"
+            },
+            {
+                id: 19,
+                name: "德国管理面板",
+                url: "http://panel.winkxr.de",
+                description: "Zgo-德国中控1panel面板",
+                category: "work",
+                icon: "fas fa-server"
+            },
+            {
+                id: 20,
+                name: "路由器管理面板",
+                url: "http://192.168.100.1",
+                description: "本地openwrt面板",
+                category: "work",
+                icon: "fas fa-server"
             }
         ];
 
         // 状态管理
         let links = JSON.parse(localStorage.getItem('links')) || sampleLinks;
+        let categories = JSON.parse(localStorage.getItem('categories')) || ['work', 'study', 'entertainment', 'tools', 'shopping'];
         let currentCategory = 'all';
+        let isEditing = false;
+        let currentEditId = null;
         
         // DOM元素
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = document.getElementById('theme-icon');
         const addLinkBtn = document.getElementById('add-link-btn');
-        const addLinkModal = document.getElementById('add-link-modal');
-        const closeAddModal = document.getElementById('close-add-modal');
-        const cancelAdd = document.getElementById('cancel-add');
-        const addLinkForm = document.getElementById('add-link-form');
+        const importExportBtn = document.getElementById('import-export-btn');
+        const linkModal = document.getElementById('link-modal');
+        const importExportModal = document.getElementById('import-export-modal');
+        const closeModal = document.getElementById('close-modal');
+        const closeImportExport = document.getElementById('close-import-export');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const linkForm = document.getElementById('link-form');
         const linksGrid = document.getElementById('links-grid');
-        const categoryBtns = document.querySelectorAll('.category-btn');
+        const categoriesContainer = document.getElementById('categories-container');
+        const categoriesList = document.getElementById('categories-list');
         const searchInput = document.getElementById('search-input');
+        const modalTitle = document.getElementById('modal-title');
+        const linkIdInput = document.getElementById('link-id');
+        const linkIconInput = document.getElementById('link-icon');
+        const iconPreview = document.getElementById('icon-preview');
+        const jsonDataTextarea = document.getElementById('json-data');
+        const importBtn = document.getElementById('import-btn');
+        const exportBtn = document.getElementById('export-btn');
+        const refreshIframe = document.getElementById('refresh-iframe');
+        const embeddedWebsite = document.getElementById('embedded-website');
 
         // 初始化
         function init() {
+            renderCategories();
             renderLinks();
             
             // 主题切换
             themeToggle.addEventListener('click', toggleTheme);
             
-            // 添加链接功能
-            addLinkBtn.addEventListener('click', () => showModal(addLinkModal));
-            closeAddModal.addEventListener('click', () => hideModal(addLinkModal));
-            cancelAdd.addEventListener('click', () => hideModal(addLinkModal));
-            addLinkForm.addEventListener('submit', handleAddLink);
+            // 模态框功能
+            addLinkBtn.addEventListener('click', () => showAddModal());
+            importExportBtn.addEventListener('click', () => showImportExportModal());
+            closeModal.addEventListener('click', () => hideModal(linkModal));
+            closeImportExport.addEventListener('click', () => hideModal(importExportModal));
+            cancelBtn.addEventListener('click', () => hideModal(linkModal));
+            linkForm.addEventListener('submit', handleLinkSubmit);
             
-            // 分类筛选
-            categoryBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    categoryBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentCategory = btn.dataset.category;
-                    renderLinks();
-                });
-            });
+            // 图标预览
+            linkIconInput.addEventListener('input', updateIconPreview);
+            
+            // 导入/导出功能
+            importBtn.addEventListener('click', importData);
+            exportBtn.addEventListener('click', exportData);
             
             // 搜索功能
             searchInput.addEventListener('input', renderLinks);
             
+            // 刷新内嵌网页
+            refreshIframe.addEventListener('click', refreshEmbeddedWebsite);
+            
             // 点击模态框外部关闭
             window.addEventListener('click', (e) => {
-                if (e.target === addLinkModal) hideModal(addLinkModal);
+                if (e.target === linkModal) hideModal(linkModal);
+                if (e.target === importExportModal) hideModal(importExportModal);
             });
             
             // 应用保存的主题
@@ -651,6 +900,44 @@
                 document.documentElement.setAttribute('data-theme', 'dark');
                 themeIcon.className = 'fas fa-sun';
             }
+
+            // 键盘快捷键
+            document.addEventListener('keydown', handleKeyboardShortcuts);
+        }
+
+        // 渲染分类
+        function renderCategories() {
+            // 清空现有分类（除了"全部"）
+            const allBtn = categoriesContainer.querySelector('[data-category="all"]');
+            categoriesContainer.innerHTML = '';
+            categoriesContainer.appendChild(allBtn);
+            
+            // 添加自定义分类
+            categories.forEach(category => {
+                const categoryBtn = document.createElement('button');
+                categoryBtn.className = 'category-btn';
+                categoryBtn.dataset.category = category;
+                categoryBtn.textContent = getCategoryName(category);
+                categoryBtn.addEventListener('click', handleCategoryClick);
+                categoriesContainer.appendChild(categoryBtn);
+            });
+            
+            // 更新分类列表
+            categoriesList.innerHTML = '';
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                categoriesList.appendChild(option);
+            });
+        }
+
+        // 处理分类点击
+        function handleCategoryClick(e) {
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            categoryBtns.forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            currentCategory = e.target.dataset.category;
+            renderLinks();
         }
 
         // 渲染链接
@@ -683,36 +970,96 @@
                     <h3>${link.name}</h3>
                     <p>${link.description}</p>
                     <span class="category-tag">${getCategoryName(link.category)}</span>
-                    <button class="delete-btn" onclick="deleteLink(event, ${link.id})">
-                        <i class="fas fa-times"></i>
-                    </button>
+                    <div class="card-actions">
+                        <button class="edit-btn" onclick="editLink(event, ${link.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="delete-btn" onclick="deleteLink(event, ${link.id})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
                 </a>
             `).join('');
         }
 
-        // 添加新链接
-        function handleAddLink(e) {
+        // 显示添加链接模态框
+        function showAddModal() {
+            isEditing = false;
+            currentEditId = null;
+            modalTitle.textContent = '添加新链接';
+            document.getElementById('submit-btn').textContent = '添加';
+            linkForm.reset();
+            linkIdInput.value = '';
+            updateIconPreview();
+            showModal(linkModal);
+        }
+
+        // 编辑链接
+        function editLink(e, id) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const link = links.find(link => link.id === id);
+            if (!link) return;
+            
+            isEditing = true;
+            currentEditId = id;
+            modalTitle.textContent = '编辑链接';
+            document.getElementById('submit-btn').textContent = '更新';
+            
+            // 填充表单
+            linkIdInput.value = link.id;
+            document.getElementById('link-name').value = link.name;
+            document.getElementById('link-url').value = link.url;
+            document.getElementById('link-description').value = link.description;
+            document.getElementById('link-category').value = link.category;
+            document.getElementById('link-icon').value = link.icon;
+            
+            updateIconPreview();
+            showModal(linkModal);
+        }
+
+        // 处理链接提交（添加/编辑）
+        function handleLinkSubmit(e) {
             e.preventDefault();
             
+            const id = linkIdInput.value ? parseInt(linkIdInput.value) : Date.now();
             const name = document.getElementById('link-name').value;
             const url = document.getElementById('link-url').value;
             const description = document.getElementById('link-description').value;
             const category = document.getElementById('link-category').value;
+            const icon = document.getElementById('link-icon').value || getIconByCategory(category);
             
-            const newLink = {
-                id: Date.now(),
+            const linkData = {
+                id,
                 name,
                 url: url.startsWith('http') ? url : `https://${url}`,
                 description,
                 category,
-                icon: getIconByCategory(category)
+                icon
             };
             
-            links.push(newLink);
+            if (isEditing) {
+                // 更新现有链接
+                const index = links.findIndex(link => link.id === currentEditId);
+                if (index !== -1) {
+                    links[index] = linkData;
+                }
+            } else {
+                // 添加新链接
+                links.push(linkData);
+                
+                // 如果分类不存在，添加到分类列表
+                if (!categories.includes(category)) {
+                    categories.push(category);
+                    saveCategories();
+                    renderCategories();
+                }
+            }
+            
             saveLinks();
             renderLinks();
-            hideModal(addLinkModal);
-            addLinkForm.reset();
+            hideModal(linkModal);
         }
 
         // 删除链接
@@ -727,9 +1074,67 @@
             }
         }
 
+        // 更新图标预览
+        function updateIconPreview() {
+            const iconClass = linkIconInput.value || 'fas fa-link';
+            iconPreview.className = iconClass;
+        }
+
+        // 刷新内嵌网页
+        function refreshEmbeddedWebsite() {
+            embeddedWebsite.src = embeddedWebsite.src;
+        }
+
+        // 显示导入/导出模态框
+        function showImportExportModal() {
+            jsonDataTextarea.value = JSON.stringify(links, null, 2);
+            showModal(importExportModal);
+        }
+
+        // 导入数据
+        function importData() {
+            try {
+                const importedData = JSON.parse(jsonDataTextarea.value);
+                if (Array.isArray(importedData)) {
+                    links = importedData;
+                    saveLinks();
+                    renderLinks();
+                    
+                    // 更新分类列表
+                    const newCategories = [...new Set(links.map(link => link.category))];
+                    categories = newCategories;
+                    saveCategories();
+                    renderCategories();
+                    
+                    alert('数据导入成功！');
+                    hideModal(importExportModal);
+                } else {
+                    alert('导入的数据格式不正确！');
+                }
+            } catch (error) {
+                alert('导入的数据格式不正确！');
+            }
+        }
+
+        // 导出数据
+        function exportData() {
+            const dataStr = JSON.stringify(links, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = 'moyu-navigation-data.json';
+            link.click();
+        }
+
         // 保存链接到本地存储
         function saveLinks() {
             localStorage.setItem('links', JSON.stringify(links));
+        }
+
+        // 保存分类到本地存储
+        function saveCategories() {
+            localStorage.setItem('categories', JSON.stringify(categories));
         }
 
         // 根据分类获取图标
@@ -751,9 +1156,10 @@
                 study: '学习',
                 entertainment: '娱乐',
                 tools: '工具',
-                shopping: '购物'
+                shopping: '购物',
+                all: '全部'
             };
-            return categoryNames[categoryKey] || '其他';
+            return categoryNames[categoryKey] || categoryKey;
         }
 
         // 切换主题
@@ -778,6 +1184,21 @@
         // 隐藏模态框
         function hideModal(modal) {
             modal.style.display = 'none';
+        }
+
+        // 键盘快捷键
+        function handleKeyboardShortcuts(e) {
+            // 按 / 聚焦搜索框
+            if (e.key === '/' && !e.ctrlKey && !e.metaKey) {
+                e.preventDefault();
+                searchInput.focus();
+            }
+            
+            // 按 Esc 关闭打开的模态框
+            if (e.key === 'Escape') {
+                if (linkModal.style.display === 'flex') hideModal(linkModal);
+                if (importExportModal.style.display === 'flex') hideModal(importExportModal);
+            }
         }
 
         // 初始化应用

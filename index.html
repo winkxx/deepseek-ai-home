@@ -1,9 +1,28 @@
+8|26工作日志
+1.良率提升措施:优化NBC19的放料归正调整，减少无膜误判以及正面错位误判情况，所有线体的铆接块磕伤模型重新调整，优化部分顶盖片脏污崩边误判，调整16120相关注液孔标准。
+2.SPC-MES验证进度，内部进度报表还在对照中，还没能对照OK无法调整，目前所有线体的显示情况调整中，目前B3已经调整，B4部分线体调整OK，30194-664基础MES已经调整，还没有导入。
+3.问题点：1.跑错通道情况还没有根绝2.还存在部分错位误判情况，目前调整了部分，还没根绝。3.良率图表还不能独立汇总，需要人工介入4.CL41以及部分显示屏相关零件还没有发到位。
+
+3跑2的程序进度：
+1.单机台更换程序到调试程序，到恢复正常跑线需要调机时长最少半天
+2.目前已导入线体：47213，83213，NBC18正极 NBC19正负极，开会定义为待物料时NBC18负极以及73275其中一条线进行更换，不影响停机，周日则已经打合计划安排16120以及38200的程序更换，预计本周B3铺设完成，B4的其中一条73275以及A3的30194-664可能还需要切时间。
+
+
+10/16工作日志
+1.追加独立复判机台功能：部分图片显示比例异常问题，已经在18正极开始验证，同一工站出现多次传图情况，目前还在调整程序，速度基本满足。
+2.独立复判机台追加方案：目前服务器方案与新增主机工控方案同步设计中，与供应商沟通为，新增一台小工控以及屏幕，工控具有可携带性，方便搬运，可以满足临时需求，无需一线一机，可节省部分成本
+3.改造NBC19线体进度：机构已经调试OK，目前在调试成像，预估明天开始搭建视觉工程
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOYU导航</title>
+    <title>MOYU导航 - 优化版</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -675,6 +694,14 @@
             },
             {
                 id: 2,
+                name: "MDN Web Docs",
+                url: "https://developer.mozilla.org",
+                description: "Web开发技术文档",
+                category: "study",
+                icon: "fas fa-code"
+            },
+            {
+                id: 3,
                 name: "YouTube",
                 url: "https://youtube.com",
                 description: "视频分享平台",
@@ -682,7 +709,23 @@
                 icon: "fab fa-youtube"
             },
             {
-                id: 3,
+                id: 4,
+                name: "Google翻译",
+                url: "https://translate.google.com",
+                description: "在线翻译工具",
+                category: "tools",
+                icon: "fas fa-language"
+            },
+            {
+                id: 5,
+                name: "知乎",
+                url: "https://zhihu.com",
+                description: "中文问答社区",
+                category: "entertainment",
+                icon: "fas fa-question-circle"
+            },
+            {
+                id: 6,
                 name: "京东",
                 url: "https://jd.com",
                 description: "综合网购商城",
@@ -690,7 +733,7 @@
                 icon: "fas fa-shopping-bag"
             },
             {
-                id: 4,
+                id: 7,
                 name: "Stack Overflow",
                 url: "https://stackoverflow.com",
                 description: "程序员问答社区",
@@ -698,7 +741,15 @@
                 icon: "fab fa-stack-overflow"
             },
             {
-                id: 5,
+                id: 8,
+                name: "Can I use",
+                url: "https://caniuse.com",
+                description: "Web技术兼容性查询",
+                category: "tools",
+                icon: "fas fa-check-circle"
+            },
+            {
+                id: 9,
                 name: "Google",
                 url: "https://google.com",
                 description: "全球最大的搜索引擎",
@@ -706,7 +757,7 @@
                 icon: "fab fa-google"
             },
             {
-                id: 6,
+                id: 10,
                 name: "百度",
                 url: "https://baidu.com",
                 description: "中文搜索引擎",
@@ -714,7 +765,7 @@
                 icon: "fas fa-search"
             },
             {
-                id: 7,
+                id: 11,
                 name: "淘宝",
                 url: "https://taobao.com",
                 description: "网购零售平台",
@@ -722,7 +773,15 @@
                 icon: "fas fa-shopping-cart"
             },
             {
-                id: 8,
+                id: 12,
+                name: "微博",
+                url: "https://weibo.com",
+                description: "社交媒体平台",
+                category: "entertainment",
+                icon: "fab fa-weibo"
+            },
+            {
+                id: 13,
                 name: "Bilibili",
                 url: "https://bilibili.com",
                 description: "视频分享和弹幕网站",
@@ -730,7 +789,23 @@
                 icon: "fas fa-play-circle"
             },
             {
-                id: 9,
+                id: 14,
+                name: "微信",
+                url: "https://weixin.qq.com",
+                description: "即时通讯应用",
+                category: "tools",
+                icon: "fab fa-weixin"
+            },
+            {
+                id: 15,
+                name: "腾讯QQ",
+                url: "https://im.qq.com",
+                description: "即时通讯软件",
+                category: "tools",
+                icon: "fab fa-qq"
+            },
+            {
+                id: 16,
                 name: "网易云音乐",
                 url: "https://music.163.com",
                 description: "在线音乐平台",
@@ -738,7 +813,23 @@
                 icon: "fas fa-music"
             },
             {
-                id: 10,
+                id: 17,
+                name: "豆瓣",
+                url: "https://douban.com",
+                description: "图书、电影、音乐社区",
+                category: "entertainment",
+                icon: "fas fa-film"
+            },
+            {
+                id: 18,
+                name: "简书",
+                url: "https://jianshu.com",
+                description: "创作社区",
+                category: "entertainment",
+                icon: "fas fa-pen"
+            },
+            {
+                id: 19,
                 name: "CSDN",
                 url: "https://csdn.net",
                 description: "IT技术社区",
@@ -746,7 +837,7 @@
                 icon: "fas fa-laptop-code"
             },
             {
-                id: 11,
+                id: 20,
                 name: "LeetCode",
                 url: "https://leetcode.com",
                 description: "编程练习平台",
@@ -754,7 +845,23 @@
                 icon: "fas fa-code"
             },
             {
-                id: 12,
+                id: 21,
+                name: "慕课网",
+                url: "https://imooc.com",
+                description: "IT技能学习平台",
+                category: "study",
+                icon: "fas fa-graduation-cap"
+            },
+            {
+                id: 22,
+                name: "腾讯课堂",
+                url: "https://ke.qq.com",
+                description: "在线教育平台",
+                category: "study",
+                icon: "fas fa-chalkboard-teacher"
+            },
+            {
+                id: 23,
                 name: "阿里云",
                 url: "https://aliyun.com",
                 description: "云计算服务平台",
@@ -762,7 +869,7 @@
                 icon: "fas fa-cloud"
             },
             {
-                id: 13,
+                id: 24,
                 name: "腾讯云",
                 url: "https://cloud.tencent.com",
                 description: "云计算服务平台",
@@ -770,60 +877,12 @@
                 icon: "fas fa-server"
             },
             {
-                id: 14,
+                id: 25,
                 name: "百度云",
                 url: "https://cloud.baidu.com",
                 description: "云计算服务平台",
                 category: "work",
                 icon: "fas fa-database"
-            },
-            {
-                id: 15,
-                name: "探针",
-                url: "https://tz.443777.xyz",
-                description: "自建探针",
-                category: "work",
-                icon: "fas fa-server"
-            },
-            {
-                id: 16,
-                name: "椰子转发",
-                url: "https://nya.trp.sh",
-                description: "IEPL转发",
-                category: "work",
-                icon: "fas fa-server"
-            },
-            {
-                id: 17,
-                name: "低调转发",
-                url: "https://didiaozhuanfa.uk",
-                description: "隧道转发",
-                category: "work",
-                icon: "fas fa-server"
-            }
-            {
-                id: 18,
-                name: "日本管理面板",
-                url: "http://control.winkxr.de",
-                description: "Zgo-日本中控宝塔面板",
-                category: "work",
-                icon: "fas fa-server"
-            },
-            {
-                id: 19,
-                name: "德国管理面板",
-                url: "http://panel.winkxr.de",
-                description: "Zgo-德国中控1panel面板",
-                category: "work",
-                icon: "fas fa-server"
-            },
-            {
-                id: 20,
-                name: "路由器管理面板",
-                url: "http://192.168.100.1",
-                description: "本地openwrt面板",
-                category: "work",
-                icon: "fas fa-server"
             }
         ];
 
